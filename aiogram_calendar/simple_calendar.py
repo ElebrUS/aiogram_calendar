@@ -12,6 +12,13 @@ calendar_callback = CallbackData('simple_calendar', 'act', 'year', 'month', 'day
 
 class SimpleCalendar:
 
+    def __init__(self, locale: str = 'en'):
+        """ :param str locale: Locale to use in the calendar, if None is used EN."""
+        if locale == 'en':
+            self.days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+        elif locale == 'ru':
+            self.days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+
     async def start_calendar(
         self,
         year: int = datetime.now().year,
@@ -41,7 +48,7 @@ class SimpleCalendar:
         ))
         # Second row - Week Days
         inline_kb.row()
-        for day in ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]:
+        for day in self.days:
             inline_kb.insert(InlineKeyboardButton(day, callback_data=ignore_callback))
 
         # Calendar rows - Days of month
@@ -49,7 +56,7 @@ class SimpleCalendar:
         for week in month_calendar:
             inline_kb.row()
             for day in week:
-                if(day == 0):
+                if day == 0:
                     inline_kb.insert(InlineKeyboardButton(" ", callback_data=ignore_callback))
                     continue
                 inline_kb.insert(InlineKeyboardButton(

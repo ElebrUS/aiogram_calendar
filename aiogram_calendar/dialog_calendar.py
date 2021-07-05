@@ -12,9 +12,14 @@ ignore_callback = calendar_callback.new("IGNORE", -1, -1, -1)  # for buttons wit
 
 
 class DialogCalendar:
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-    def __init__(self, year: int = datetime.now().year, month: int = datetime.now().month):
+    def __init__(self, year: int = datetime.now().year, month: int = datetime.now().month, locale: str = 'en'):
+        if locale == 'en':
+            self.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            self.days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+        elif locale == 'ru':
+            self.months = ["Янв", "Фев", "Мрт", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Нбр", "Дек"]
+            self.days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
         self.year = year
         self.month = month
 
@@ -80,14 +85,14 @@ class DialogCalendar:
             callback_data=calendar_callback.new("SET-YEAR", year, -1, -1)
         ))
         inline_kb.row()
-        for day in ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]:
+        for day in self.days:
             inline_kb.insert(InlineKeyboardButton(day, callback_data=ignore_callback))
 
         month_calendar = calendar.monthcalendar(year, month)
         for week in month_calendar:
             inline_kb.row()
             for day in week:
-                if(day == 0):
+                if day == 0:
                     inline_kb.insert(InlineKeyboardButton(" ", callback_data=ignore_callback))
                     continue
                 inline_kb.insert(InlineKeyboardButton(
